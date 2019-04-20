@@ -9,7 +9,8 @@
     "develop": "gatsby develop",
     "format": "prettier --write src/**/*.{js,jsx}",
     "server": "nodemon ./backend/app.js",
-    "start": "npm run develop & npm run server",
+    "startDev": "npm run develop & npm run server",
+    "start": "npm run build & node ./backend/app.js",
     "serve": "gatsby serve",
     "test": "echo \"Write tests! -> https://gatsby.dev/unit-testing\""
   },
