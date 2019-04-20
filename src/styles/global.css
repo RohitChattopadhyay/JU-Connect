@@ -1,0 +1,126 @@
+@import url('https://use.fontawesome.com/releases/v5.8.1/css/all.css');
+
+.flex-container {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+}
+
+.flex-card {
+  margin: 1rem;
+  text-align: left;
+  min-width: 15rem;
+  padding: 0.5rem 2rem;
+  transition: all 0.5s;
+  border: 1px solid lightgray;
+  border-radius: 0 0.5em 0 0.5em;
+  cursor: pointer;
+  max-width: 49%;
+}
+
+.flex-card h6 {
+  font-weight: bolder
+}
+
+.flex-card small {
+  color: grey
+}
+
+.flex-card:hover {
+  border-left: 5px solid green;
+  box-shadow: 2px 0px grey
+}
+
+.flex-container input[type="checkbox"]{
+  display: none;
+}
+
+.flex-container input[type="checkbox"]:checked+.flex-card{
+  border-left: 3px solid green;
+} 
+.flex-container input[type="checkbox"]:checked+.flex-card:hover{
+  border-left: 5px solid red;
+} 
+
+/* search */
+.searchBar {
+  width: 50%;
+  box-sizing: border-box;
+  border: 2px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+  background-color: white;
+  background-image: url('https://www.w3schools.com/howto/searchicon.png');
+  background-position: 10px 10px; 
+  background-repeat: no-repeat;
+  padding: 12px 20px 12px 40px;
+  -webkit-transition: width 0.4s ease-in-out;
+  transition: width 0.4s ease-in-out;
+}
+
+.searchBar:focus {
+  width: 100%;
+}
+
+#loginScreen .vertical-center {
+  min-height: 100%;  
+  min-height: 100vh; 
+  display: flex;
+  align-items: center;
+}
+
+#loginScreen .rollPop {
+  background: rgba(179,220,237,1);
+  background: -moz-linear-gradient(left, rgba(179,220,237,1) 0%, rgba(41,184,229,1) 50%, rgba(188,224,238,1) 100%);
+  background: -webkit-gradient(left top, right top, color-stop(0%, rgba(179,220,237,1)), color-stop(50%, rgba(41,184,229,1)), color-stop(100%, rgba(188,224,238,1)));
+  background: -webkit-linear-gradient(left, rgba(179,220,237,1) 0%, rgba(41,184,229,1) 50%, rgba(188,224,238,1) 100%);
+  background: -o-linear-gradient(left, rgba(179,220,237,1) 0%, rgba(41,184,229,1) 50%, rgba(188,224,238,1) 100%);
+  background: -ms-linear-gradient(left, rgba(179,220,237,1) 0%, rgba(41,184,229,1) 50%, rgba(188,224,238,1) 100%);
+  background: linear-gradient(to right, rgba(179,220,237,1) 0%, rgba(41,184,229,1) 50%, rgba(188,224,238,1) 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#b3dced', endColorstr='#bce0ee', GradientType=1 );
+}
+#loginScreen .rollPop center{
+  width: 100%;
+}
+
+#loginScreen .login{
+  background-color: rgba(188,224,238,.5);
+  border-radius: .25rem;
+  border-top: 1px solid grey ;
+}
+#loginScreen .login .rollInput{
+  border-radius: 0 0 0 0.25rem
+}
+#loginScreen .login .goButton{
+  border-radius: 0 0 .25rem 0
+}
+
+/* float btn */
+.save-btn{
+  border-radius: 100%;
+  height: 3em;
+  width: 3em;
+  font-size: 1.5em;
+  position: fixed;
+  bottom: 1em;
+  right: 1em;
+  transition: all 1s;
+}
+.save-btn:hover {
+  background-color: green
+}
+.saveBtn{
+  font-size: 1.5em;
+}
+.channelScreen {
+
+}
+@media only screen and (max-width: 600px) {
+  .login {
+    width: 98% !important;
+  }
+  .searchBar{
+    width: 100%;
+  }
+}
