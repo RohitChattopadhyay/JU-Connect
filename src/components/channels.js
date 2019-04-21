@@ -24,7 +24,7 @@ export default ({submitter}) => (
       render={data => (
         <div className={[bs.container,"channelScreen"].join(' ')}>
         <div className={bs.container}>
-          <ToastContainer transition={Slide} position="top-right" autoClose={2000} hideProgressBar={false} newestOnTop={false} closeOnClick rtl={false} pauseOnVisibilityChange />
+          <ToastContainer transition={Slide} position="top-right" autoClose={5000} hideProgressBar={false} newestOnTop={false} closeOnClick rtl={false} pauseOnVisibilityChange />
           <div className={bs.jumbotron}>
               <h3>JU Connect</h3><hr />
               <input type="text" className="searchBar" name="search" placeholder="Search.." />

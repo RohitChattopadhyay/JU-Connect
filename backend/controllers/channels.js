@@ -1,9 +1,10 @@
 const connection = require('../config.js');
+const {auth} = require('./authorization');
 
 module.exports = {
+
     all: (req, res) => { 
-        // res.status(200).send(JSON.stringify(req))
-        console.log(req.cookies)
+
         const key = req.params.q
         let sql = key===undefined?'SELECT * from channels':`SELECT * FROM \`channels\` where CONCAT(slug, ' ', name) LIKE "%${key.trim()}%"`
         connection.query(sql, (err, rows) => {
@@ -15,27 +16,41 @@ module.exports = {
                         'data': rows
                     })
                 );
+                return
             } else {
-                res.status(400).send(err);
+                res.status(400).end();
+                return
             }
-        });
+        }
+    );
     },
     search: (req, res) => {
-        const key = req.body.q      
-        let sql = key===undefined?'SELECT * from channels':`SELECT * FROM \`channels\` where CONCAT(slug, ' ', name) LIKE "%${key.trim()}%"`
-        connection.query(sql, (err, rows) => {
-            if (!err) {
-                res.setHeader('Content-Type', 'application/json');
-                res.status(200).send(JSON.stringify(
-                    {
-                        'result' : 'success',
-                        'data': rows
-                    })
-                );
-            } else {
-                res.status(400).send(err);
+        auth(req,res,function(err,data){
+            if(err){
+                res.status(400).end();
+                return
+            } else if(data==1){
+                const key = req.body.q      
+                let sql = key===undefined?'SELECT * from channels':`SELECT * FROM \`channels\` where CONCAT(slug, ' ', name) LIKE "%${key.trim()}%"`
+                connection.query(sql, (err, rows) => {
+                    if (!err) {
+                        res.setHeader('Content-Type', 'application/json');
+                        res.status(200).send(JSON.stringify(
+                            {
+                                'result' : 'success',
+                                'data': rows
+                            })
+                        );
+                    } else {
+                        res.status(400).end();
+                    }
+                });
             }
-        });
+            else{
+                res.status(403).end();
+                return
+            }
+        } )               
     },
     slug: (req, res) => {
         res.setHeader('Content-Type', 'application/json');
@@ -53,7 +68,7 @@ module.exports = {
                         })
                     );
                     } else {
-                        res.status(400).send(err);
+                        res.status(400).end();
                     }
                 }
             );

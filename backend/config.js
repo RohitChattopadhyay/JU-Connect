@@ -12,5 +12,4 @@ try {
 } catch(e) {
     console.log('Database Connection failed:' + e);
 }
-
-module.exports = connection;
+module.exports = connection

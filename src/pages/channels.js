@@ -3,6 +3,7 @@ import Channels from "../components/channels"
 import Cookies from 'universal-cookie';
 import { toast } from 'react-toastify';
 import { navigate } from "gatsby"
+import {pusher} from "../package/oneSignal"
 
 const cookies = new Cookies();
 
@@ -22,7 +23,7 @@ class ChannelContainer extends React.Component {
         for (var i = 0; i < checkboxes.length; i++) {
           array.push(checkboxes[i].value);
         }
-        console.log(JSON.stringify(array));
+        // console.log(JSON.stringify(array));
         toast.success(`✔ Subscribed to ${array.length===0?"No":array.length} Channel${array.length>1?"s":""}`)
      }  
      componentDidMount() {
@@ -30,7 +31,8 @@ class ChannelContainer extends React.Component {
         if(!isLoggedIn){
             navigate("/")
             return(<span></span>)
-        }         
+        }
+        pusher.setup()
      }
     render() {
         return(
