@@ -1,7 +1,7 @@
 const dbConnect = {
-    host: 'db4free.net',
-    user: 'adminjuconnect',
-    password: 'password',
+    host: process.env.mysqlHost || 'localhost',
+    user: process.env.mysqlUser || 'root',
+    password: process.env.mysqlPass || 'password',
     database: 'juconnect'
 }
 module.exports = {
