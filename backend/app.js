@@ -1,3 +1,4 @@
+require('dotenv').config();
 var express = require('express');
 var path = require('path');
 var logger = require('morgan');
@@ -14,7 +15,7 @@ app.use(session({secret: process.env.SECRET || 'ssshhhhh'}));
 
 
 
-app.use(express.static((path.resolve(__dirname, '..', 'public'))))
+// app.use(express.static((path.resolve(__dirname, '..', 'public'))))
 
 app.use(logger('dev'));
 app.use(bodyParser.json());
@@ -22,7 +23,29 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 app.use('/api', routes);
-// app.use('/users', users);
+
+//OneSinal
+app.get('/manifest.json', function(req, res) {
+    res.json(
+        {
+            "gcm_sender_id": process.env.gcmSenderId,
+            "gcm_sender_id_comment": "Do not change the GCM Sender ID"
+        }
+    )
+});
+
+app.get('/OneSignalSDKWorker.js', function(req,res){
+        res.type('.js');
+        res.send("importScripts('https://cdn.onesignal.com/sdks/OneSignalSDKWorker.js');")
+    }
+)
+
+app.get('/OneSignalSDKUpdaterWorker.js', function(req,res){
+        res.type('.js');
+        res.send("importScripts('https://cdn.onesignal.com/sdks/OneSignalSDKWorker.js');")
+    }
+)
+//OneSignal Ends
 
 /// catch 404 and forwarding to error handler
 app.use(function(req, res, next) {

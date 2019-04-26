@@ -1,9 +1,10 @@
 var mysql = require('mysql');
+require('dotenv').config();
 
 var connection = mysql.createConnection({
-    host: process.env.mysqlHost || 'localhost',
-    user: process.env.mysqlUser || 'root',
-    password: process.env.mysqlPass || 'password',
+    host: process.env.mysqlHost,
+    user: process.env.mysqlUser,
+    password: process.env.mysqlPass,
     database: 'juconnect'
 });
 

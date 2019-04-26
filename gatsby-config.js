@@ -1,7 +1,9 @@
+require('dotenv').config();
+
 const dbConnect = {
-    host: process.env.mysqlHost || 'localhost',
-    user: process.env.mysqlUser || 'root',
-    password: process.env.mysqlPass || 'password',
+    host: process.env.mysqlHost,
+    user: process.env.mysqlUser,
+    password: process.env.mysqlPass,
     database: 'juconnect'
 }
 module.exports = {
