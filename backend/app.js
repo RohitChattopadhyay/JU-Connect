@@ -15,7 +15,7 @@ app.use(session({secret: process.env.SECRET || 'ssshhhhh'}));
 
 
 
-// app.use(express.static((path.resolve(__dirname, '..', 'public'))))
+
 
 app.use(logger('dev'));
 app.use(bodyParser.json());
@@ -23,6 +23,9 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 app.use('/api', routes);
+
+//gatsby
+app.use(express.static((path.resolve(__dirname, '..', 'public'))))
 
 //OneSinal
 app.get('/manifest.json', function(req, res) {
