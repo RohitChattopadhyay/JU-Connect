@@ -20,6 +20,7 @@ module.exports = {
         });       
     },    
     update: (req, res) => {
+        console.log(res.session)
         auth(req,res,function(err,data){
             if(err){
                 res.status(400).end();

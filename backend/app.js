@@ -6,12 +6,19 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var helmet = require('helmet')
 const session = require('express-session');
-
+var MySQLStore = require('express-mysql-session')(session);
+const connection = require('./config.js');
+var sessionStore = new MySQLStore({}, connection);
 var routes = require('./routes/index');
 var port = process.env.PORT || 8000
 var app = express()
 app.use(helmet())
-app.use(session({secret: process.env.SECRET || 'ssshhhhh'}));
+app.use(session({
+    secret: process.env.SECRET || 'ssshhhhh',
+    store: sessionStore,
+    resave: false,
+    saveUninitialized: false
+}));
 
 
 
