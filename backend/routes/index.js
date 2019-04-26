@@ -13,6 +13,8 @@ router.get('/channel/:slug', channel.get);
 router.post('/channels', channel.search);
 router.post('/channels/slug', channel.slug);
 router.put('/channel/:slug', channel.update);
+router.post('/subscriber/update',subscribers.update)
+router.get('/subscriber',subscribers.subs)
 
 router.post('/auth/signup',auth.signup)
 router.post('/auth/login',auth.login)

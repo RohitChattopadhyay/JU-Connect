@@ -4,13 +4,13 @@ import Cookies from 'universal-cookie';
 import { toast } from 'react-toastify';
 import { navigate } from "gatsby"
 import {pusher} from "../package/oneSignal"
+import axios from 'axios'
 
 const cookies = new Cookies();
 
 class ChannelContainer extends React.Component {
     constructor(props) {
         super(props);
-        
         this.state = {
            next:(Buffer.from(cookies.get('identifier')||' ', 'base64').toString()).length===12?true:false
         }
@@ -23,8 +23,31 @@ class ChannelContainer extends React.Component {
         for (var i = 0; i < checkboxes.length; i++) {
           array.push(checkboxes[i].value);
         }
-        // console.log(JSON.stringify(array));
-        toast.success(`✔ Subscribed to ${array.length===0?"No":array.length} Channel${array.length>1?"s":""}`)
+        axios.post('/api/subscriber/update', {
+            channels : array
+          })
+          .then(function (response) {
+                if(response.data.code==200)
+                    toast.success(`✔ Subscribed to ${array.length===0?"No":array.length} Channel${array.length>1?"s":""}`)
+                else{
+                    toast.error('Fatal Error | Try again later or Contact Admin stating error code 402')
+                    toast.warn('Logging out in a second')
+                    setTimeout(function(){
+                      cookies.remove('identifier', { path: '/' })
+                      // location.reload();
+                    }, 2000);
+                }
+            }
+          )
+          .catch(function (error) {
+            toast.error('Fatal Error | Try again later or Contact Admin stating error code 401')
+            toast.warn('Logging out in a second')
+            setTimeout(function(){
+              cookies.remove('identifier', { path: '/' })
+              location.reload();
+            }, 2000);
+          }
+        );
      }  
      componentDidMount() {
         const isLoggedIn = this.state.next;
@@ -32,12 +55,12 @@ class ChannelContainer extends React.Component {
             navigate("/")
             return(<span></span>)
         }
-        pusher.setup()
+        pusher.setup() 
      }
     render() {
         return(
             <div>
-                <Channels submitter={this.submitter} />
+                <Channels submitter={this.submitter}/>
             </div>
         )
     }

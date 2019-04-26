@@ -1,144 +1,63 @@
 const connection = require('../config.js');
+const {auth} = require('./authorization');
 
 module.exports = {
-    all: (req, res) => { 
-        const key = req.params.q
-        let sql = key===undefined?'SELECT * from channels':`SELECT * FROM \`channels\` where CONCAT(slug, ' ', name) LIKE "%${key.trim()}%"`
+    subs: (req, res) => {
+        const roll = req.session.roll || "abcd"
+        let sql = `SELECT \`channels\` from \`subscribers\` WHERE \`roll\` = "${roll}"`
         connection.query(sql, (err, rows) => {
             if (!err) {
                 res.setHeader('Content-Type', 'application/json');
                 res.status(200).send(JSON.stringify(
                     {
                         'result' : 'success',
-                        'data': rows
+                        'data': rows.length>0?JSON.parse(rows[0].channels):''
                     })
                 );
             } else {
-                res.status(400).send(err);
+                res.status(400).end();
             }
-        });
-    },
-    search: (req, res) => {
-        const key = req.body.q      
-        let sql = key===undefined?'SELECT * from channels':`SELECT * FROM \`channels\` where CONCAT(slug, ' ', name) LIKE "%${key.trim()}%"`
-        connection.query(sql, (err, rows) => {
-            if (!err) {
-                res.setHeader('Content-Type', 'application/json');
-                res.status(200).send(JSON.stringify(
-                    {
-                        'result' : 'success',
-                        'data': rows
-                    })
-                );
-            } else {
-                res.status(400).send(err);
-            }
-        });
-    },
-    slug: (req, res) => {
-        res.setHeader('Content-Type', 'application/json');
-        const key = req.body.q     
-        if (
-            typeof key !== 'undefined'
-        ){
-            let sql = `SELECT COUNT(*) as cnt FROM \`channels\` WHERE slug = "${key.toLowerCase() }"`
-            connection.query(sql, (err, rows) => {
-                if (!err) {                    
-                    res.status(200).send(JSON.stringify(
-                        {
-                            'result' : 'success',
-                            'available': rows[0].cnt==0?true:false
-                        })
-                    );
-                    } else {
-                        res.status(400).send(err);
-                    }
-                }
-            );
-        }
-        else {
-            res.status(200).send(                        {
-                'result' : 'fail',
-                'error': "Enter proper slug name" 
-            });
-        }
-    },
-    create: (req, res, next) => {
-        let response;
-        const name = req.body.name;
-        const slug = req.body.slug.toLowerCase();
-        if (
-            typeof name !== 'undefined'
-            && typeof slug !== 'undefined'
-        ) {
-            connection.query('INSERT INTO channels (name, slug) VALUES (?, ?)',
-                [name, slug],
-                (err, result) => {
-                    handleSuccessOrErrorMessage(err, result, res);
-                });
-
-        } else {
-            response = {
-                'result' : 'error',
-                'msg' : 'Please fill required details'
-            };
-            res.setHeader('Content-Type', 'application/json');
-            res.status(200).send(JSON.stringify(response));
-        }
-    },
-
-    get: (req, res) => {
-        connection.query('SELECT * from books where id = ?', [req.params.id], (err, rows) => {
-            res.setHeader('Content-Type', 'application/json');
-            res.status(200).send(JSON.stringify(
-                {
-                    'result' : 'success',
-                    'data': rows[0]
-                })
-            );
-        })
-    },
-
+        });       
+    },    
     update: (req, res) => {
-        let response;
-        const name = req.body.name;
-        const isbn = req.body.isbn;
-        const id = req.params.id;
-        console.log(name, isbn, 'yooo');
-        if (
-            typeof name !== 'undefined'
-            && typeof isbn !== 'undefined'
-        ) {
-            connection.query('UPDATE books SET name = ?, isbn = ? WHERE id = ?',
-                [name, isbn, id],
-                function(err, result) {
-                    handleSuccessOrErrorMessage(err, result, res);
+        auth(req,res,function(err,data){
+            if(err){
+                res.status(400).end();
+                return
+            } else if(data==1){                
+                const channels = req.body.channels
+                const roll = req.session.roll
+                const uid = req.session.uid
+                let sql = `UPDATE \`subscribers\` SET \`channels\`='["${channels.join("\",\"")}"]' WHERE \`roll\`="${roll}" AND \`oid\` LIKE "%${uid}%"` 
+                connection.query(sql, (err, rows) => {
+                    if (!err) {
+                        if(rows.affectedRows==1){
+                            res.setHeader('Content-Type', 'application/json');
+                            res.status(200).send(JSON.stringify(
+                                {
+                                    'result' : 'success',
+                                    'code' : 200
+                                })
+                            );
+                        }
+                        else {                            
+                            res.setHeader('Content-Type', 'application/json');
+                            res.status(200).send(JSON.stringify(
+                                {
+                                    'result' : 'fail',
+                                    'code' : 402
+                                })
+                            );
+                        }
+                    } else {
+                        res.status(400).end();
+                    }
                 });
-        } else {
-            response = {'result' : name, 'msg' : 'Please fill required information'};
-            res.setHeader('Content-Type', 'application/json');
-            res.send(200, JSON.stringify(response));
-        }
+            }
+            else{
+                res.status(403).end();
+                return
+            }
+        } ) 
     },
-
-    destroy: (req, res) => {
-        connection.query('DELETE FROM books WHERE id = ?', [req.params.id], (err, result) => {
-            handleSuccessOrErrorMessage(err, result, res);
-        });
-    }
 };
-
-function handleSuccessOrErrorMessage(err, result, res) {
-    if (!err){
-        let response;
-        if (result.affectedRows != 0) {
-            response = {'result' : 'success'};
-        } else {
-            response = {'msg' : 'No Result Found'};
-        }
-        res.setHeader('Content-Type', 'application/json');
-        res.status(200).send(JSON.stringify(response));
-    } else {
-        res.status(400).send(err);
-    }
-}

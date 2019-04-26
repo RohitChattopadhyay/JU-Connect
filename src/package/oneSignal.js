@@ -5,10 +5,10 @@ import axios from 'axios'
 const cookies = new Cookies();
 
 export class pusher extends React.Component {
-  static setup(){
+  static setup(){    
     if(!pusher.checkSupport()){
       toast.error("Sorry! Notification is not supported, try another browser")
-      return;
+      return null;
     }
     
     OneSignal.isPushNotificationsEnabled().then(function(isEnabled) {

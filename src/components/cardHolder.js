@@ -5,7 +5,7 @@ class Card extends React.Component {
         const props = this.props;
        return (
            <label htmlFor={props.slug}>
-           <input id={props.slug} name = "channelBox" value={props.slug} type="checkbox"/>
+           <input id={props.slug} name = "channelBox" value={props.slug} type="checkbox" defaultChecked={props.check} />
                 <div className={`card flex-card`}>
                     <h6>{props.name}</h6>
                     <small>{props.slug}</small>

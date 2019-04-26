@@ -1,6 +1,6 @@
+require("dotenv").config()
 import React from "react"
 import PropTypes from "prop-types"
-
 export default function HTML(props) {
   return (
     <html {...props.htmlAttributes}>
@@ -16,15 +16,7 @@ export default function HTML(props) {
         <link rel="manifest" href="/manifest.json" />
         <script src="https://cdn.onesignal.com/sdks/OneSignalSDK.js" async=""></script>
         <script dangerouslySetInnerHTML={{
-            __html: `
-            var OneSignal = window.OneSignal || [];
-            OneSignal.push(function() {
-              OneSignal.init({
-                appId: "7b89428f-6846-462c-8253-ee0fa1a7213e",
-                allowLocalhostAsSecureOrigin: true,
-              });
-            });
-            `,
+            __html: `var OneSignal = window.OneSignal || [];OneSignal.push(function() {OneSignal.init({appId: "${process.env.GATSBY_OneSignalAppID}",allowLocalhostAsSecureOrigin: true});});`,
           }} />
       </head>
       <body {...props.bodyAttributes}>

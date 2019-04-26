@@ -4,8 +4,8 @@ module.exports = {
     auth: (req,res,callback) => {
         roll = req.session.roll || ""
         uid  = req.session.uid || ""
-        let sql = `SELECT COUNT(*) as cnt FROM \`subscribers\` WHERE roll = "${roll}" AND oid LIKE "%${uid}%"`
-        connection.query(sql, (err, rows) => {    
+        let sql = `SELECT COUNT(*) as cnt FROM \`subscribers\` WHERE roll = "${roll}" AND oid LIKE "%${uid}%"`        
+        connection.query(sql, (err, rows) => {
             if (err) 
                 callback(err,null);
             else
